@@ -1,0 +1,49 @@
+<div class="login">
+  <h2>Login</h2>
+  @if (!isVisibleOtpTextbox()) {
+    <form [formGroup]="generateOtpForm">
+      <div class="form-group">
+        <input
+          formControlName="employeeId"
+          type="text"
+          name="employeeId"
+          id="employeeId"
+          class="form-control"
+          [class.is-invalid]="employeeId?.invalid && employeeId?.touched"
+          placeholder="PEN / GPEN"
+          minlength="6"
+          maxlength="10"
+        />
+        @if (employeeId?.errors?.['required'] && employeeId?.touched) {
+          <p class="form-error">PEN / GPEN is required.</p>
+        }
+        @if (employeeId?.errors?.['minlength'] && employeeId?.touched) {
+          <p class="form-error">PEN / GPEN must be at least 6 Digits.</p>
+        }
+      </div>
+      <button (click)="generateOtp()" [disabled]="generateOtpForm.invalid">Login</button>
+    </form>
+  } @else {
+    <form [formGroup]="verifyOtpForm">
+      <div class="form-group">
+        <input
+          formControlName="otp"
+          type="text"
+          name="otp"
+          id="otp"
+          class="form-control"
+          [class.is-invalid]="otp?.invalid && otp?.touched"
+          placeholder="OTP"
+          maxlength="6"
+        />
+        @if (otp?.errors?.['required'] && otp?.touched) {
+          <p class="form-error">OTP is required.</p>
+        }
+      </div>
+      <button (click)="verifyOtp()" [disabled]="verifyOtpForm.invalid">Login</button>
+      @if (error()) {
+        <div class="error-message">{{ error() }}</div>
+      }
+    </form>
+  }
+</div>

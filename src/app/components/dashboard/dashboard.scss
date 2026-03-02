@@ -1,0 +1,27 @@
+.wrapper {
+  padding: 2rem;
+
+  .container {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    .search {
+      display: grid;
+      flex-direction: column;
+      gap: 1rem;
+      background-color: #fff;
+      padding: 1rem;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      border-radius: 4px;
+
+      .license-search {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+        gap: 1rem;
+        width: 100%;
+      }
+    }
+  }
+}

@@ -1,0 +1,290 @@
+<section class="search">
+  @if (isLoading()) {
+    <div class="loader"><mat-spinner></mat-spinner></div>
+  }
+  <mat-accordion>
+    <mat-expansion-panel [expanded]="step() === 0" (opened)="setStep(0)">
+      <mat-expansion-panel-header>
+        <mat-panel-title>Search</mat-panel-title>
+      </mat-expansion-panel-header>
+      <div class="search-container">
+        <form [formGroup]="businessFacilitationForm">
+          <mat-form-field>
+            <mat-label>Search your license with</mat-label>
+            <mat-select formControlName="searchYourLicenseWith" name="searchYourLicenseWith">
+              <mat-option>-- Search your license with --</mat-option>
+              @for (
+                searchYourLicenseWith of searchYourLicenseWithList();
+                track searchYourLicenseWith
+              ) {
+                <mat-option [value]="searchYourLicenseWith.id">{{
+                  searchYourLicenseWith.name
+                }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field>
+            <mat-label>Financial Year</mat-label>
+            <mat-select formControlName="financialYear" name="financialYear">
+              <mat-option>-- Financial Year --</mat-option>
+              @for (financialYear of financialYearList(); track financialYear) {
+                <mat-option [value]="financialYear.id">{{ financialYear.year }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field>
+            <mat-label>Ward Year</mat-label>
+            <mat-select formControlName="wardYear" name="wardYear">
+              <mat-option>-- Ward Year --</mat-option>
+              @for (wardYear of wardYearList(); track wardYear) {
+                <mat-option [value]="wardYear.id">{{ wardYear.assessmentYear }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field>
+            <mat-label>Zonal Office</mat-label>
+            <mat-select formControlName="zonalOffice" name="zonalOffice">
+              <mat-option>-- Zonal Office --</mat-option>
+              @for (zonalOffice of zonalOfficeList(); track zonalOffice) {
+                <mat-option [value]="zonalOffice.officeCode">{{ zonalOffice.name }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field>
+            <mat-label>Ward</mat-label>
+            <mat-select formControlName="ward" name="ward">
+              <mat-option>-- Ward --</mat-option>
+              @for (ward of wardList(); track ward) {
+                <mat-option [value]="ward.officeCode"
+                  >{{ ward.wardNo }} - {{ ward.name }}</mat-option
+                >
+              }
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field>
+            <mat-label>Door No</mat-label>
+            <input matInput type="text" formControlName="doorNo" />
+            @if (businessFacilitationForm.get('doorNo')?.value) {
+              <button
+                matSuffix
+                matIconButton
+                aria-label="Clear"
+                (click)="businessFacilitationForm.get('doorNo')?.setValue('')"
+              >
+                <mat-icon>close</mat-icon>
+              </button>
+            }
+          </mat-form-field>
+
+          <mat-form-field>
+            <mat-label>Door Sub No</mat-label>
+            <input matInput type="text" formControlName="doorSubNo" />
+            @if (businessFacilitationForm.get('doorSubNo')?.value) {
+              <button
+                matSuffix
+                matIconButton
+                aria-label="Clear"
+                (click)="businessFacilitationForm.get('doorSubNo')?.setValue('')"
+              >
+                <mat-icon>close</mat-icon>
+              </button>
+            }
+          </mat-form-field>
+
+          <button matButton="filled" (click)="onSearchLicense()">
+            <mat-icon>search</mat-icon>Search
+          </button>
+        </form>
+      </div>
+    </mat-expansion-panel>
+    <mat-expansion-panel [expanded]="step() === 1" (opened)="setStep(1)">
+      <mat-expansion-panel-header>
+        <mat-panel-title>Result</mat-panel-title>
+      </mat-expansion-panel-header>
+      <div class="result-container">
+        @if (licensePreviewResult()) {
+          <div class="license-preview">
+            <div class="license-preview-header">
+              <img src="images/govt-logo.png" alt="Govt. Logo" width="70px" />
+              <div>Form - 2</div>
+              <div>(See rule 05, 12, 16, 23)</div>
+              <div>CHIRAKKAL GRAMA PANCHAYAT</div>
+              <div class="certificate-title">CERTIFICATE OF ENTERPRISES LICENSE</div>
+            </div>
+            <div class="license-preview-section">
+              <div class="license-preview-section-title">
+                <div>1. Licensee Details</div>
+                <div>[ലൈസൻസ് എടുക്കുന്ന വ്യക്തിയുടെ പേരും വിലാസവും]</div>
+              </div>
+              <div class="license-preview-section-body">
+                <table>
+                  <tr class="license-place-details">
+                    <th>Licensee/Organization Name</th>
+                    <td>{{ licensePreviewResult().applicant[0].nameEng }}</td>
+                  </tr>
+                  <tr>
+                    <th>Name in Local Language</th>
+                    <td>{{ licensePreviewResult().applicant[0].nameLocal }}</td>
+                  </tr>
+                  <tr>
+                    <th>Licensee Address</th>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <th>Licensee Contact Details</th>
+                    <td>
+                      <div>Mobile: {{ licensePreviewResult().applicant[0].mobileNo }}</div>
+                      <div>Email : {{ licensePreviewResult().applicant[0].emailId }}</div>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+            <div class="license-preview-section">
+              <div class="license-preview-section-title">
+                <div>2. Licensing Place Details</div>
+                <div>[ലൈസൻസിങ് യൂണിറ്റ് സ്ഥലവും]</div>
+              </div>
+              <div class="license-preview-section-body">
+                <table>
+                  <tr class="license-place-details">
+                    <th>Licensing Unit ID/Type</th>
+                    <td>{{ licensePreviewResult().licenseUnit.unitTypeMaster.name }}</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Details of Licensing Place</strong> -Building no. / Survey no</td>
+                    <td>
+                      <span>
+                        {{ licensePreviewResult().buildings.map(bulding => `${licensePreviewResult().licenseUnit.wardNo} - ${bulding.doorNo}/`).join(', ')}}
+                      </span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>Licensing Unit Name</th>
+                    <td>{{ licensePreviewResult().licenseUnit.licenseUnitNameEng }}</td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+            <div class="license-preview-section">
+              <div class="license-preview-section-title">
+                <div>3. Licensing Business Activity Details</div>
+              </div>
+              <div class="license-preview-section-body">
+                <table class="table-border">
+                  <tr>
+                    <th>Sl No</th>
+                    <th>Business Category</th>
+                    <th>Type</th>
+                    <th>Sub Type</th>
+                  </tr>
+                  @for (business of licensePreviewResult().business; track business) {
+                    <tr>
+                      <td>{{ $index + 1 }}</td>
+                      <td>{{ business.businessCategoryMaster.name }}</td>
+                      <td>{{ business.businessTypeMaster.name }}</td>
+                      <td>{{ business.businessSubtypeMaster.name }}</td>
+                    </tr>
+                  }
+                </table>
+              </div>
+            </div>
+            <div class="license-preview-section">
+              <div class="license-preview-section-title">
+                <div>4. License Validity & Renewal Period</div>
+              </div>
+              <div class="license-preview-section-body">
+                <table class="table-border">
+                  <tr>
+                    <th>License valid From</th>
+                    <th>License valid to</th>
+                    <th>Renewal time of License</th>
+                    <th>License Fee</th>
+                  </tr>
+                  <tr>
+                    @for (fee of licensePreviewResult().fees; track fee) {
+                      <td>{{ licensePreviewResult().licenseValidFrom }}</td>
+                      <td>{{ licensePreviewResult().licenseValidTo }}</td>
+                      <td>{{ `Before ${licensePreviewResult().renewalPeriodTo}` }}</td>
+                      <td>{{ fee.fees }}</td>
+                    }
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div>
+        } @else {
+          <p>No results found.</p>
+        }
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+
+  <!-- <mat-card appearance="outlined" class="result-card">
+    <mat-card-header>
+      <mat-card-title>Search Result</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="result-container">
+        @if (searchResults().length > 0) {
+          <table mat-table [dataSource]="searchResults()" class="mat-elevation-z8">
+            <ng-container matColumnDef="applicationNo">
+              <th mat-header-cell *matHeaderCellDef>Application No</th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.applicationNo ? element.applicationNo : '-' }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="applicationType">
+              <th mat-header-cell *matHeaderCellDef>Application Type</th>
+              <td mat-cell *matCellDef="let element">{{ element.applicationType }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="doorNo">
+              <th mat-header-cell *matHeaderCellDef>Door/Survey No</th>
+              <td mat-cell *matCellDef="let element">{{ element.doorNo }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="applicantName">
+              <th mat-header-cell *matHeaderCellDef>Licensee Name</th>
+              <td mat-cell *matCellDef="let element">{{ element.applicantName }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="licenseUnitName">
+              <th mat-header-cell *matHeaderCellDef>Unit Name</th>
+              <td mat-cell *matCellDef="let element">{{ element.licenseUnitName }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="status">
+              <th mat-header-cell *matHeaderCellDef>Status</th>
+              <td mat-cell *matCellDef="let element">{{ element.status }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="licenseId">
+              <th mat-header-cell *matHeaderCellDef>Action</th>
+              <td mat-cell *matCellDef="let element">
+                <button
+                  mat-button
+                  color="primary"
+                  (click)="getLicenseForPreview(element.licenseId)"
+                >
+                  <mat-icon>visibility</mat-icon>View Details
+                </button>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+          </table>
+        } @else {
+          <p>No results found.</p>
+        }
+      </div>
+    </mat-card-content>
+  </mat-card> -->
+</section>

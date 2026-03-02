@@ -1,0 +1,69 @@
+$form-error-color: #df3838;
+
+:host {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.login {
+  background-color: #fff;
+  padding: 4rem 2rem;
+  border-radius: 8px;
+  min-width: 400px;
+  width: 30%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+  h2 {
+    margin-bottom: 1rem;
+    color: #333;
+  }
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    margin-bottom: 1rem;
+
+    .form-control {
+      outline: none;
+      width: 100%;
+      padding: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      &.is-invalid {
+        border-color: $form-error-color;
+      }
+    }
+    
+    .form-error {
+      color: $form-error-color;
+      font-size: 0.875rem;
+      text-align: right;
+    }
+  }
+
+  button {
+    padding: 1rem 1.5rem;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+
+    &:hover {
+      background-color: #0056b3;
+    }
+    &:disabled {
+      background-color: #007bff91;
+      cursor: not-allowed;
+    }
+  }
+
+  .error-message {
+    color: $form-error-color;
+    margin-top: 1rem;
+    text-align: center;
+  }
+}
